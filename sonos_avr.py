@@ -76,6 +76,8 @@ def avr_set(room):
 	else:
 		room['avr'].command(room['avr_input'])
 		time.sleep(2)
+		room['avr'].command(room['avr'].source()[0].replace('SI', 'SV'))
+		time.sleep(1)
 		room['avr'].vol_ref()
 		time.sleep(1)
 
