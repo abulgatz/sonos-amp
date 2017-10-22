@@ -57,7 +57,7 @@ class Avr:
 		return self.response()
 
 	def is_off(self):
-		response = self.power_query(self)
+		responses = self.power_query()
 		if any(response == 'PWSTANDBY' for response in responses):
 			return True
 
