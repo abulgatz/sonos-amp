@@ -8,7 +8,7 @@ import soco
 import Queue
 import signal
 from datetime import datetime
-from Avr import Avr
+from avr import Avr
 
 rooms = []
 
