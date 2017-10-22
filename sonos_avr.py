@@ -69,15 +69,28 @@ def avr_set(room):
 		# do zone 2 stuff
 #	else:
 	if room['avr'].is_off():
+		print u"{} {} avr is off".format(datetime.now(), room['name']).encode('utf-8')
 		room['avr'].command(room['avr_input'])
 		time.sleep(5)
 		room['avr'].vol_ref()
 		time.sleep(1)
 	else:
+		print u"{} {} avr is on".format(datetime.now(), room['name']).encode('utf-8')
+		
+		sisources = room['avr'].source()
+		print sisources
+		sisource = next(x for x in sisources if x.startswith('SI'))
+ 		print sisource
+		svsource = sisource.replace('SI', 'SV')
+		print svsource
+
+		time.sleep(1)
 		room['avr'].command(room['avr_input'])
 		time.sleep(2)
-		room['avr'].command(room['avr'].source()[0].replace('SI', 'SV'))
+		room['avr'].command('SVON')
 		time.sleep(1)
+		room['avr'].command(svsource)
+		time.sleep(2)
 		room['avr'].vol_ref()
 		time.sleep(1)
 
@@ -177,8 +190,8 @@ while True:
 			
 			# If coordinator status has changed to playing, turn on AVR, set volume and input
 			if room['last_coord_status'] != 'PLAYING' and coord_room['last_status'] == 'PLAYING' and 'avr_ip' in room:
-				avr_set(room)
 				print u"{} {} coordinated by {} setting avr input to: {}".format(datetime.now(), room['name'], coord_room['name'], room['avr_input']).encode('utf-8')
+				avr_set(room)
 
 			room['last_coord_status'] = coord_room['last_status']
 		# End of if avr block

@@ -60,6 +60,7 @@ class Avr:
 		responses = self.power_query()
 		if any(response == 'PWSTANDBY' for response in responses):
 			return True
+		return False
 
 	# *** Zone 2 power *********
 	def z2_power_on(self):
