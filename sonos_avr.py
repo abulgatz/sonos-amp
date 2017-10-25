@@ -77,22 +77,28 @@ def avr_set(room):
 	else:
 		print u"{} {} avr is on".format(datetime.now(), room['name']).encode('utf-8')
 		
-		sisources = room['avr'].source()
-		print sisources
-		sisource = next(x for x in sisources if x.startswith('SI'))
- 		print sisource
-		svsource = sisource.replace('SI', 'SV')
-		print svsource
+		sisource = None
+		loops = 0
 
-		time.sleep(1)
-		room['avr'].command(room['avr_input'])
-		time.sleep(2)
-		room['avr'].command('SVON')
-		time.sleep(1)
-		room['avr'].command(svsource)
-		time.sleep(2)
-		room['avr'].vol_ref()
-		time.sleep(1)
+		while not sisource and loops < 2:
+			sisources = room['avr'].source()
+			print sisources
+			if any(item.startswith('SI') for item in sisources):
+				sisource = next(x for x in sisources if x.startswith('SI'))
+				if not sisource == room['avr_input']:
+					svsource = sisource.replace('SI', 'SV')
+
+					time.sleep(1)
+					room['avr'].command(room['avr_input'])
+					time.sleep(2)
+					room['avr'].command('SVON')
+					time.sleep(1)
+					room['avr'].command(svsource)
+					time.sleep(2)
+					room['avr'].vol_ref()
+					time.sleep(1)
+
+			loops += 1
 
 def handle_sigterm(*args):
 	global break_loop
